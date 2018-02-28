@@ -26,7 +26,11 @@ class ImagesPipeline(ImagesPipeline):
         if not image_paths:
             raise DropItem("Item contains no images")
         for path in image_paths:
-            os.rename(os.getcwd()+'/pic/'+path,os.getcwd()+"/test/" + path)
+            move_path=dict()
+            move_path['old']=os.getcwd()+'/pic/'+path
+            move_path['new']=os.getcwd()+'/' +path
+            print (move_path)
+            os.renames(move_path['old'],move_path['new'])
         return item
     
     
