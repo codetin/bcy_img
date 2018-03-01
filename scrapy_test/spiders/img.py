@@ -9,10 +9,39 @@ from scrapy_test.items import ScrapyTestItem
 import pymysql
 
 class scrapy_test(scrapy.Spider):
-    name = 'scrapy_test'
+
+    def dbHandle():
+        conn = pymysql.connect(
+            host = "databro.cn",
+            user = "root",
+            passwd = "capcom",
+            charset = "utf8",
+            use_unicode = False
+        )
+        return conn
+
+    dbObject = dbHandle()
+    cursor = dbObject.cursor()
+    cursor.execute("USE bcy")
+    sql = "SELECT auth_url FROM today_new_come"
+        
+    try:
+        cursor.execute(sql)
+        cursor.connection.commit()
+        today_new_come = cursor.fetchall()
+        #process_sms(result[0])
+    except BaseException as e:
+        print("MySQL ERROR>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message\n")
+        dbObject.rollback()
+    
+    name = 'bcy_img'
+    #scrapy crawl bcy_img
     allowed_domains = ['bcy.net']
-    now = datetime.datetime.now()
-    start_urls = ['https://bcy.net/coser/detail/86897/2076989']
+
+    start_urls=list()
+    for i in today_new_come:
+        start_urls.append("".join(i))
+        #"".join将tuple单元格转换为str
 
     def parse(self,response):
         item = ScrapyTestItem()
@@ -23,5 +52,6 @@ class scrapy_test(scrapy.Spider):
         item['image_urls']=list()
         for i in urls:
             item['image_urls'].append(i[:-5])
-
         yield(item)
+        
+        
