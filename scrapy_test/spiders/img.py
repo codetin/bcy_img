@@ -24,7 +24,7 @@ class scrapy_test(scrapy.Spider):
     cursor = dbObject.cursor()
     cursor.execute("USE bcy")
     sql = "SELECT auth_url FROM today_new_come"
-        
+
     try:
         cursor.execute(sql)
         cursor.connection.commit()
@@ -33,7 +33,7 @@ class scrapy_test(scrapy.Spider):
     except BaseException as e:
         print("MySQL ERROR>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message\n")
         dbObject.rollback()
-    
+
     name = 'bcy_img'
     #scrapy crawl bcy_img
     allowed_domains = ['bcy.net']
@@ -48,10 +48,8 @@ class scrapy_test(scrapy.Spider):
         item['name']=response.css('h1.js-post-title::text').extract_first()
         urls = response.css('img.detail_std.detail_clickable::attr(src)').extract()
 
-        item['filepath']='test'
+        item['filepath']=response.url.split('/')[-1]
         item['image_urls']=list()
         for i in urls:
             item['image_urls'].append(i[:-5])
         yield(item)
-        
-        

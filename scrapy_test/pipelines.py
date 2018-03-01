@@ -28,7 +28,7 @@ class ImagesPipeline(ImagesPipeline):
         for path in image_paths:
             move_path=dict()
             move_path['old']=os.getcwd()+'/pic/'+path
-            move_path['new']=os.getcwd()+'/' +path
+            move_path['new']=os.getcwd()+'/pic/' +item['filepath']+'/'+path
             print (move_path)
             os.renames(move_path['old'],move_path['new'])
         return item
