@@ -33,7 +33,6 @@ class ImagesPipeline(ImagesPipeline):
             os.renames(move_path['old'],move_path['new'])
         return item
     
-    
 
 #    def file_path(self,request,response=None,info=None):
 #        item=request.meta['item'] #通过上面的meta传递过来item
