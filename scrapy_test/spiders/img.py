@@ -47,8 +47,12 @@ class scrapy_test(scrapy.Spider):
         item = ScrapyTestItem()
         item['name']=response.css('h1.js-post-title::text').extract_first()
         urls = response.css('img.detail_std.detail_clickable::attr(src)').extract()
-
-        item['filepath']=response.url.split('/')[-1]
+        item['uid'] = response.css('a.fz14.dib.maxw250.cut::attr(href)').extract_first().split('/')[-1]
+        #获取uid   /u/54497 => 54497
+        item['album_id'] = response.url.split('/')[-1]
+        #相册id   https://bcy.net/coser/detail/10000/474890 => 474890
+        item['file_path']='/' + item['uid'] +'/' + item['album_id'] +'/'
+        #保存路径 /54497/474890/
         item['image_urls']=list()
         for i in urls:
             item['image_urls'].append(i[:-5])

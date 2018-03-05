@@ -14,6 +14,7 @@ class ScrapyTestItem(scrapy.Item):
     image_urls = scrapy.Field()
     images = scrapy.Field()
     name = scrapy.Field()
-    filepath = scrapy.Field()
-    
+    file_path = scrapy.Field()
+    uid = scrapy.Field()
+    album_id = scrapy.Field()
     pass

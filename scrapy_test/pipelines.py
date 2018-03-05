@@ -6,6 +6,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import scrapy
 import os,sys
+import pymysql
 
 from scrapy.pipelines.images import ImagesPipeline
 from scrapy.exceptions import DropItem
@@ -20,17 +21,31 @@ class ImagesPipeline(ImagesPipeline):
             yield scrapy.Request(image_url,meta={'item':item,'index':item['image_urls'].index(image_url)})
 
 
-
+    #完成item下载之后进行改名
     def item_completed(self, results, item, info):
+        conn = pymysql.connect(
+            host = "databro.cn",
+            user = "root",
+            passwd = "capcom",
+            charset = "utf8",
+            use_unicode = False
+        )
+        cursor = conn.cursor()
+        cursor.execute("USE bcy")
+
         image_paths = [x['path'] for ok, x in results if ok]      # ok判断是否下载成功
         if not image_paths:
             raise DropItem("Item contains no images")
         for path in image_paths:
             move_path=dict()
-            move_path['old']=os.getcwd()+'/pic/'+path
-            move_path['new']=os.getcwd()+'/pic/' +item['filepath']+'/'+path
+            move_path['old']=os.getcwd() + '/pic/' + path
+            move_path['new']=os.getcwd() + '/pic' + item['file_path'] + path
+            #./pic/2104760/2079169/full/1df239329d83a6d572bec40140b3faa12dbe269a.jpg
             print (move_path)
             os.renames(move_path['old'],move_path['new'])
+            sql = "INSERT INTO bcy_img (auth_id,album_id,pic_path) VALUES (%s,%s,%s)"
+            cursor.execute(sql,(item['uid'],item['album_id'],'/pic' + item['file_path'] + path))
+            cursor.connection.commit()
         return item
     
 
