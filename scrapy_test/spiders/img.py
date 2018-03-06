@@ -23,7 +23,7 @@ class scrapy_test(scrapy.Spider):
     dbObject = dbHandle()
     cursor = dbObject.cursor()
     cursor.execute("USE bcy")
-    sql = "SELECT auth_url FROM today_new_come"
+    sql = "SELECT auth_url FROM album_list limit 1000"
 
     try:
         cursor.execute(sql)
@@ -44,6 +44,16 @@ class scrapy_test(scrapy.Spider):
         #"".join将tuple单元格转换为str
 
     def parse(self,response):
+    
+        conn = pymysql.connect(
+            host = "databro.cn",
+            user = "root",
+            passwd = "capcom",
+            charset = "utf8",
+            use_unicode = False
+        )
+        cursor = conn.cursor()
+        cursor.execute("USE cosplay")
         item = ScrapyTestItem()
         item['name']=response.css('h1.js-post-title::text').extract_first()
         urls = response.css('img.detail_std.detail_clickable::attr(src)').extract()
@@ -53,7 +63,16 @@ class scrapy_test(scrapy.Spider):
         #相册id   https://bcy.net/coser/detail/10000/474890 => 474890
         item['file_path']='/' + item['uid'] +'/' + item['album_id'] +'/'
         #保存路径 /54497/474890/
+
+        #sql = "INSERT INTO ct_gallery (creator) VALUES (%s)"
+        #cursor.execute(sql,(item['uid']))
+        #new_album_id = conn.insert_id())
+        #cursor.connection.commit()
+
+        
+
         item['image_urls']=list()
         for i in urls:
             item['image_urls'].append(i[:-5])
+            #item['image_urls'].append(i)
         yield(item)

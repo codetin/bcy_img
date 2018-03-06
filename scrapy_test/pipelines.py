@@ -45,6 +45,7 @@ class ImagesPipeline(ImagesPipeline):
             os.renames(move_path['old'],move_path['new'])
             sql = "INSERT INTO bcy_img (auth_id,album_id,pic_path) VALUES (%s,%s,%s)"
             cursor.execute(sql,(item['uid'],item['album_id'],'/pic' + item['file_path'] + path))
+            #print (conn.insert_id())
             cursor.connection.commit()
         return item
     
