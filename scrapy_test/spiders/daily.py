@@ -13,20 +13,10 @@ from scrapy_test.db import db_conn
 
 class scrapy_test(scrapy.Spider):
 
-    def dbHandle():
-        conn = pymysql.connect(
-            host = "databro.cn",
-            user = "root",
-            passwd = "capcom",
-            charset = "utf8",
-            use_unicode = False
-        )
-        return conn
-
     dbObject = db_conn()
     cursor = dbObject.cursor()
     cursor.execute("USE bcy")
-    sql = "SELECT auth_url FROM album_list"
+    sql = "SELECT auth_url FROM today_new_come"
 
     try:
         cursor.execute(sql)
@@ -36,7 +26,7 @@ class scrapy_test(scrapy.Spider):
         print("MySQL ERROR>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message\n")
         dbObject.rollback()
 
-    name = 'bcy_img'
+    name = 'bcy_daily'
     allowed_domains = ['bcy.net']
 
     start_urls=list()

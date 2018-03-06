@@ -10,6 +10,7 @@ import pymysql
 
 from scrapy.pipelines.images import ImagesPipeline
 from scrapy.exceptions import DropItem
+from scrapy_test.db import db_conn
 
 class ScrapyTestPipeline(object):
     def process_item(self, item, spider):
@@ -23,20 +24,8 @@ class ImagesPipeline(ImagesPipeline):
 
     #完成item下载之后进行改名
     def item_completed(self, results, item, info):
-        conn = pymysql.connect(
-            host = "databro.cn",
-            user = "root",
-            passwd = "capcom",
-            charset = "utf8",
-            use_unicode = False
-        )
-        cp666_conn = pymysql.connect(
-            host = "databro.cn",
-            user = "root",
-            passwd = "capcom",
-            charset = "utf8",
-            use_unicode = False
-        )
+        conn = db_conn()
+        cp666_conn = db_conn()
         cursor = conn.cursor()
         cursor.execute("USE bcy")
         cursor_cp666 = cp666_conn.cursor()
