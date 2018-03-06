@@ -46,23 +46,12 @@ class ImagesPipeline(ImagesPipeline):
         if not image_paths:
             raise DropItem("Item contains no images")
         for path in image_paths:
-
-            #print (conn.insert_id())
-
-            # move_path=dict()
-            # move_path['old']=os.getcwd() + '/pic/' + path
-            # move_path['new']=os.getcwd() + '/pic' + item['file_path'] + path
-            #./pic/2104760/2079169/full/1df239329d83a6d572bec40140b3faa12dbe269a.jpg
-
-            # print (move_path)
-            # os.renames(move_path['old'],move_path['new'])
-
             sql = "INSERT INTO bcy_img (auth_id,album_id,pic_path) VALUES (%s,%s,%s)"
-            cursor.execute(sql,(item['uid'],item['album_id'],'/pic/' + path))
+            cursor.execute(sql,(item['uid'],item['album_id'], '/' + path))
             cursor.connection.commit()
 
             sql = "INSERT INTO ct_public_upload (name,path,ext) VALUES (%s,%s,%s)"
-            cursor_cp666.execute(sql,(path.split('/')[-1],'/pic/' + path,'jpg'))
+            cursor_cp666.execute(sql,(path.split('/')[-1], '/' + path,'jpg'))
             cp666_pic = cp666_conn.insert_id()
             cursor_cp666.connection.commit()
                 

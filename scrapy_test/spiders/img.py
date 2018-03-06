@@ -7,6 +7,8 @@ import scrapy
 import datetime
 from scrapy_test.items import ScrapyTestItem
 import pymysql
+import hashlib
+import random
 
 class scrapy_test(scrapy.Spider):
 
@@ -87,7 +89,7 @@ class scrapy_test(scrapy.Spider):
             item['cp666_uid'] = int(result[0])
         if result is None:
             sql = "insert into ct_user (username,password) VALUES (%s,%s)"
-            cursor_cp666.execute(sql,(item['uid'],'505131577c0f9f236fcffc72d5e1b1d0'))
+            cursor_cp666.execute(sql,(item['uid'],hashlib.md5(''.join(random.sample('zyxwvutsrqponmlkjihgfedcba',6))).hexdigest()))
             item['cp666_uid'] = cp666_conn.insert_id()
             cursor_cp666.connection.commit()
         
