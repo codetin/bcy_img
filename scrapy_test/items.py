@@ -16,6 +16,7 @@ class ScrapyTestItem(scrapy.Item):
     name = scrapy.Field()
     file_path = scrapy.Field()
     uid = scrapy.Field()
+    nickname = scrapy.Field()
     album_id = scrapy.Field()
     cp666_album_id = scrapy.Field()
     cp666_uid  = scrapy.Field()
