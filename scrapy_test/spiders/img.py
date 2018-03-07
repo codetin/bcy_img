@@ -69,7 +69,7 @@ class scrapy_test(scrapy.Spider):
         #如果用户在CP666已经注册过
         if result is not None:
             item['cp666_uid'] = int(result[0])
-        #如果用户没有在CP666平台注册过
+        #如果用户没有在CP666平台注册过,则建立用户并记录与bcy uid的对应关系
         if result is None:
             sql = "insert into ct_user (username,password) VALUES (%s,%s)"
             cursor_cp666.execute(sql,(item['nickname'],hashlib.md5(''.join(random.sample('zyxwvutsrqponmlkjihgfedcba',6))).hexdigest()))
