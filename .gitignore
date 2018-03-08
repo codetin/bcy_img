@@ -1,3 +1,4 @@
+db.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -30,8 +31,7 @@ wheels/
 *.png
 *.gif
 pic/
-/scrapy_test/db.py
-/scrapy_test/settings.py
+settings.py
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
