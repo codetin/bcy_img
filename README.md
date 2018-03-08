@@ -1,6 +1,7 @@
 #环境配置,安装python组件
 pip install scrapy
 pip install pymysql
+pip install Pillow
 
 #获取程序代码
 git clone git@github.com:codetin/bcy_img.git
