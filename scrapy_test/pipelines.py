@@ -28,7 +28,7 @@ class ImagesPipeline(ImagesPipeline):
         conn = db_conn()
         cp666_conn = web_conn()
         cursor = conn.cursor()
-        cursor.execute("USE bcy")
+        cursor.execute("USE bcy_scrapy")
         cursor_cp666 = cp666_conn.cursor()
         cursor_cp666.execute("USE cosplay")            
         
@@ -36,15 +36,15 @@ class ImagesPipeline(ImagesPipeline):
         if not image_paths:
             raise DropItem("Item contains no images")
         for path in image_paths:
-            sql = "INSERT INTO bcy_img (auth_id,album_id,pic_path) VALUES (%s,%s,%s)"
-            cursor.execute(sql,(item['uid'],item['album_id'], '/' + path))
-            cursor.connection.commit()
-
             sql = "INSERT INTO ct_public_upload (name,path,ext) VALUES (%s,%s,%s)"
             cursor_cp666.execute(sql,(path.split('/')[-1], '/' + path,'jpg'))
             cp666_pic = cp666_conn.insert_id()
             cursor_cp666.connection.commit()
-                
+
+            sql = "INSERT INTO bcy_img (auth_id,cp666_uid,album_id,cp666_album_id,cp666_pic_id,pic_path) VALUES (%s,%s,%s,%s,%s,%s)"
+            cursor.execute(sql,(item['uid'],item['cp666_uid'],item['album_id'],item['cp666_album_id'],cp666_pic, '/' + path))
+            cursor.connection.commit()
+  
             sql = "INSERT INTO ct_gallery_detail (gallery_id,pic,creator) VALUES (%s,%s,%s)"
             cursor_cp666.execute(sql,(item['cp666_album_id'],cp666_pic,item['cp666_uid']))
             cursor_cp666.connection.commit()

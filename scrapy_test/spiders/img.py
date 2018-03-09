@@ -51,7 +51,7 @@ class scrapy_test(scrapy.Spider):
         #保存路径 /54497/474890/
         conn = db_conn()
         cursor = conn.cursor()
-        cursor.execute("USE bcy")
+        cursor.execute("USE bcy_scrapy")
 
         cp666_conn = web_conn()
         cursor_cp666 = cp666_conn.cursor()
@@ -59,7 +59,7 @@ class scrapy_test(scrapy.Spider):
 
         #判断BCY用户是否存在,如不存在则在CP666上新建帐号,使用BCY的用户ID作为CP666的用户名
         try:
-            sql = "select cp666_uid from bcy_user where bcy_uid = %s"
+            sql = "select cp666_uid from bcy_img where auth_id = %s"
             cursor.execute(sql,(item['uid']))
             result = cursor.fetchone()
             cursor.connection.commit()
@@ -75,9 +75,9 @@ class scrapy_test(scrapy.Spider):
             cursor_cp666.execute(sql,(item['nickname'],hashlib.md5(''.join(random.sample('zyxwvutsrqponmlkjihgfedcba',6))).hexdigest()))
             item['cp666_uid'] = cp666_conn.insert_id()
             cursor_cp666.connection.commit()
-            sql = "insert into bcy_user (cp666_uid,bcy_uid) VALUES (%s,%s)"
-            cursor.execute(sql,(item['cp666_uid'],item['uid']))
-            cursor.connection.commit()
+            #sql = "insert into bcy_user (cp666_uid,bcy_uid) VALUES (%s,%s)"
+            #cursor.execute(sql,(item['cp666_uid'],item['uid']))
+            #cursor.connection.commit()
         
         #新建CP666相册,获取相册ID,然后建立与BCY相册的对应关系
  
@@ -90,13 +90,13 @@ class scrapy_test(scrapy.Spider):
             print("mysql daily error>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message")
             cp666_conn.rollback()
         
-        try:
-            sql = "INSERT INTO bcy_album (bcy_album_id,cp666_album_id) VALUES (%s,%s)"
-            cursor.execute(sql,(item['album_id'],item['cp666_album_id']))
-            cursor.connection.commit()
-        except BaseException as e:
-            print("mysql daily error>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message")
-            conn.rollback()
+        #try:
+        #    sql = "INSERT INTO bcy_album (bcy_album_id,cp666_album_id) VALUES (%s,%s)"
+        #    cursor.execute(sql,(item['album_id'],item['cp666_album_id']))
+        #    cursor.connection.commit()
+        #except BaseException as e:
+        #    print("mysql daily error>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message")
+        #    conn.rollback()
 
         
         
