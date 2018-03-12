@@ -82,8 +82,8 @@ class scrapy_test(scrapy.Spider):
         #新建CP666相册,获取相册ID,然后建立与BCY相册的对应关系
  
         try:
-            sql = "INSERT INTO ct_gallery (creator,title) VALUES (%s,%s)"
-            cursor_cp666.execute(sql,(item['cp666_uid'],item['name']))
+            sql = "INSERT INTO ct_gallery (creator,title,ctime,gallery_type_ids) VALUES (%s,%s,%s,2)"
+            cursor_cp666.execute(sql,(item['cp666_uid'],item['name'],int(time.time())))
             item['cp666_album_id'] = cp666_conn.insert_id()
             cursor_cp666.connection.commit()
         except BaseException as e:
