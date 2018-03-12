@@ -60,7 +60,7 @@ class scrapy_test(scrapy.Spider):
 
         #判断BCY用户是否存在,如不存在则在CP666上新建帐号,使用BCY的用户ID作为CP666的用户名
         try:
-            sql = "select cp666_uid from bcy_img where auth_id = %s"
+            sql = "select cp666_uid from bcy_user where bcy_uid = %s"
             cursor.execute(sql,(item['uid']))
             result = cursor.fetchone()
             cursor.connection.commit()
@@ -72,13 +72,13 @@ class scrapy_test(scrapy.Spider):
             item['cp666_uid'] = int(result[0])
         #如果用户没有在CP666平台注册过,则建立用户并记录与bcy uid的对应关系
         if result is None:
-            sql = "insert into ct_user (username,password) VALUES (%s,%s)"
+            sql = "insert into ct_customer (customer_name,password) VALUES (%s,%s)"
             cursor_cp666.execute(sql,(item['nickname'],hashlib.md5(''.join(random.sample('zyxwvutsrqponmlkjihgfedcba',6))).hexdigest()))
             item['cp666_uid'] = cp666_conn.insert_id()
             cursor_cp666.connection.commit()
-            #sql = "insert into bcy_user (cp666_uid,bcy_uid) VALUES (%s,%s)"
-            #cursor.execute(sql,(item['cp666_uid'],item['uid']))
-            #cursor.connection.commit()
+            sql = "insert into bcy_user (cp666_uid,bcy_uid) VALUES (%s,%s)"
+            cursor.execute(sql,(item['cp666_uid'],item['uid']))
+            cursor.connection.commit()
         
         #新建CP666相册,获取相册ID,然后建立与BCY相册的对应关系
  
