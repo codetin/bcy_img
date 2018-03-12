@@ -11,6 +11,7 @@ import hashlib
 import random
 from scrapy_test.db import db_conn
 from scrapy_test.db import web_conn
+import time
 
 class scrapy_test(scrapy.Spider):
 
