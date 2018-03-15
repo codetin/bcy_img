@@ -18,7 +18,7 @@ class scrapy_test(scrapy.Spider):
     dbObject = db_conn()
     cursor = dbObject.cursor()
     cursor.execute("USE bcy")
-    sql = "SELECT auth_url FROM album_list limit 10"
+    sql = "SELECT auth_url FROM album_list"
 
     try:
         cursor.execute(sql)
