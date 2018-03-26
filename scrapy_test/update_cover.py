@@ -18,3 +18,13 @@ try:
 except BaseException as e:
     print("mysql daily error>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message")
     cp666_conn.rollback()
+
+try:
+    sql ="UPDATE ct_gallery a,( SELECT  gallery_id,  count(*) AS count FROM  ct_gallery_detail GROUP BY  gallery_id) AS b SET a.num = b.count WHERE a.id = b.gallery_id"
+    result = cursor_cp666.execute(sql)
+    cursor_cp666.connection.commit()
+    print(result)
+except BaseException as e:
+    print("mysql daily error>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message")
+    cp666_conn.rollback()
+
