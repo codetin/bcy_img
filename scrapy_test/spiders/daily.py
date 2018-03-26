@@ -106,6 +106,6 @@ class scrapy_test(scrapy.Spider):
 
         item['image_urls']=list()
         for i in urls:
-            #item['image_urls'].append(i[:-5])
-            item['image_urls'].append(i)
+            item['image_urls'].append(i[:-5])
+            #item['image_urls'].append(i)
         yield(item)

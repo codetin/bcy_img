@@ -20,7 +20,7 @@ class ScrapyTestPipeline(object):
 class ImagesPipeline(ImagesPipeline):
     def get_media_requests(self, item, info):
         for image_url in item['image_urls']:
-            yield scrapy.Request(image_url,meta={'uid':item['uid'],'album_id':item['album_id']})
+            yield scrapy.Request(image_url+'/w650',meta={'uid':item['uid'],'album_id':item['album_id']})
 
 
     #完成item下载之后进行改名
