@@ -11,6 +11,7 @@ import hashlib
 import random
 from scrapy_test.db import db_conn
 from scrapy_test.db import web_conn
+import time
 
 class scrapy_test(scrapy.Spider):
 
@@ -51,7 +52,7 @@ class scrapy_test(scrapy.Spider):
         #保存路径 /54497/474890/
         conn = db_conn()
         cursor = conn.cursor()
-        cursor.execute("USE bcy")
+        cursor.execute("USE bcy_scrapy")
 
         cp666_conn = web_conn()
         cursor_cp666 = cp666_conn.cursor()
@@ -71,7 +72,7 @@ class scrapy_test(scrapy.Spider):
             item['cp666_uid'] = int(result[0])
         #如果用户没有在CP666平台注册过,则建立用户并记录与bcy uid的对应关系
         if result is None:
-            sql = "insert into ct_user (username,password) VALUES (%s,%s)"
+            sql = "insert into ct_customer (customer_name,password) VALUES (%s,%s)"
             cursor_cp666.execute(sql,(item['nickname'],hashlib.md5(''.join(random.sample('zyxwvutsrqponmlkjihgfedcba',6))).hexdigest()))
             item['cp666_uid'] = cp666_conn.insert_id()
             cursor_cp666.connection.commit()
@@ -82,21 +83,21 @@ class scrapy_test(scrapy.Spider):
         #新建CP666相册,获取相册ID,然后建立与BCY相册的对应关系
  
         try:
-            sql = "INSERT INTO ct_gallery (creator,title) VALUES (%s,%s)"
-            cursor_cp666.execute(sql,(item['cp666_uid'],item['name']))
+            sql = "INSERT INTO ct_gallery (creator,title,ctime,gallery_type_ids) VALUES (%s,%s,%s,2)"
+            cursor_cp666.execute(sql,(item['cp666_uid'],item['name'],int(time.time())))
             item['cp666_album_id'] = cp666_conn.insert_id()
             cursor_cp666.connection.commit()
         except BaseException as e:
             print("mysql daily error>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message")
             cp666_conn.rollback()
         
-        try:
-            sql = "INSERT INTO bcy_album (bcy_album_id,cp666_album_id) VALUES (%s,%s)"
-            cursor.execute(sql,(item['album_id'],item['cp666_album_id']))
-            cursor.connection.commit()
-        except BaseException as e:
-            print("mysql daily error>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message")
-            conn.rollback()
+        #try:
+        #    sql = "INSERT INTO bcy_album (bcy_album_id,cp666_album_id) VALUES (%s,%s)"
+        #    cursor.execute(sql,(item['album_id'],item['cp666_album_id']))
+        #    cursor.connection.commit()
+        #except BaseException as e:
+        #    print("mysql daily error>>>>>>>>>>>>>",e,"<<<<<<<<<<<<<error message")
+        #    conn.rollback()
 
         
         
