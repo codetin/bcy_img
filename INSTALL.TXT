@@ -1,0 +1,18 @@
+安装python组件
+pip install scrapy
+pip install pymysql
+
+进入放程序的目录后,获取程序代码
+git clone git@github.com:codetin/bcy_img.git
+
+cd bcy_img
+vi scrapy_test/settings.py
+将  IMAGES_STORE = '/data/pic' 修改为微站的Uploads目录的上一级目录
+
+vi scrapy_test/db.py
+将其中数据库连接字符串部分修改
+
+scrapy crawl bcy_img
+
+建立crontab
+每日11:00,执行scrapy crawl bcy_daily,注意执行目录需要在bcy_img下
